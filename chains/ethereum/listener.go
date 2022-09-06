@@ -10,19 +10,19 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC20Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC721Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/GenericHandler"
-	"github.com/Phala-Network/ChainBridge/chains"
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
+	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ChainSafe/log15"
 	eth "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	ethcommon "github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
+	"github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
+	"github.com/octopus-network/ChainBridge/bindings/ERC721Handler"
+	"github.com/octopus-network/ChainBridge/bindings/GenericHandler"
+	"github.com/octopus-network/ChainBridge/chains"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
 var BlockRetryInterval = time.Second * 5

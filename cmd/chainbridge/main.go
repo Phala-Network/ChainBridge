@@ -3,7 +3,7 @@
 /*
 Provides the command-line interface for the chainbridge application.
 
-For configuration and CLI commands see the README: https://github.com/Phala-Network/ChainBridge.
+For configuration and CLI commands see the README: https://github.com/octopus-network/ChainBridge.
 */
 package main
 
@@ -15,14 +15,14 @@ import (
 
 	"strconv"
 
-	"github.com/Phala-Network/ChainBridge/chains/ethereum"
-	"github.com/Phala-Network/ChainBridge/chains/substrate"
-	"github.com/Phala-Network/ChainBridge/config"
+	log "github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/core"
 	"github.com/Phala-Network/chainbridge-utils/metrics/health"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	log "github.com/ChainSafe/log15"
+	"github.com/octopus-network/ChainBridge/chains/ethereum"
+	"github.com/octopus-network/ChainBridge/chains/substrate"
+	"github.com/octopus-network/ChainBridge/config"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/urfave/cli/v2"
 )

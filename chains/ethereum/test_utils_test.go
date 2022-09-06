@@ -9,13 +9,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	connection "github.com/Phala-Network/ChainBridge/connections/ethereum"
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
+	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/keystore"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ChainSafe/log15"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
+	connection "github.com/octopus-network/ChainBridge/connections/ethereum"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
 const TestEndpoint = "ws://localhost:8545"

@@ -4,9 +4,9 @@
 package utils
 
 import (
-	"github.com/Phala-Network/ChainBridge/bindings/GenericHandler"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/GenericHandler"
 )
 
 var StoreFunctionSig = CreateFunctionSignature("store(bytes32)")

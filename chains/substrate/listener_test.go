@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	utils "github.com/Phala-Network/ChainBridge/shared/substrate"
-	subtest "github.com/Phala-Network/ChainBridge/shared/substrate/testing"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/Phala-Network/go-substrate-rpc-client/v3/types"
+	utils "github.com/octopus-network/ChainBridge/shared/substrate"
+	subtest "github.com/octopus-network/ChainBridge/shared/substrate/testing"
 )
 
 const ListenerTimeout = time.Second * 30

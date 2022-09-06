@@ -6,9 +6,9 @@ package utils
 import (
 	"math/big"
 
-	"github.com/Phala-Network/ChainBridge/bindings/ERC721Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC721MinterBurnerPauser"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/ERC721Handler"
+	"github.com/octopus-network/ChainBridge/bindings/ERC721MinterBurnerPauser"
 )
 
 // DeployMintAndApprove deploys a new erc721 contract, mints to the deployer, and approves the erc20 handler to transfer those token.
