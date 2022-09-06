@@ -7,10 +7,10 @@ import (
 	"bytes"
 	"testing"
 
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
-	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ChainSafe/log15"
+	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ethereum/go-ethereum/common"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
 func AssertGenericResourceAddress(t *testing.T, client *utils.Client, handler common.Address, rId msg.ResourceId, expected common.Address) {

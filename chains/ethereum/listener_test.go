@@ -10,17 +10,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC20Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC721Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/GenericHandler"
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
-	ethtest "github.com/Phala-Network/ChainBridge/shared/ethereum/testing"
+	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ChainSafe/log15"
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
+	"github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
+	"github.com/octopus-network/ChainBridge/bindings/ERC721Handler"
+	"github.com/octopus-network/ChainBridge/bindings/GenericHandler"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
+	ethtest "github.com/octopus-network/ChainBridge/shared/ethereum/testing"
 )
 
 type MockRouter struct {

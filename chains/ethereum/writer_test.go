@@ -9,15 +9,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
-	ethtest "github.com/Phala-Network/ChainBridge/shared/ethereum/testing"
-	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ChainSafe/log15"
+	"github.com/Phala-Network/chainbridge-utils/msg"
 	eth "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
+	ethtest "github.com/octopus-network/ChainBridge/shared/ethereum/testing"
 )
 
 func createWriters(t *testing.T, client *utils.Client, contracts *utils.DeployedContracts) (*writer, *writer, func(), func(), chan error, chan error) {

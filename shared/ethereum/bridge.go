@@ -6,9 +6,9 @@ package utils
 import (
 	"math/big"
 
-	"github.com/Phala-Network/ChainBridge/bindings/Bridge"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
 )
 
 func RegisterResource(client *Client, bridge, handler common.Address, rId msg.ResourceId, addr common.Address) error {

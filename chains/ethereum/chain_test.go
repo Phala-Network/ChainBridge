@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	ethtest "github.com/Phala-Network/ChainBridge/shared/ethereum/testing"
 	"github.com/Phala-Network/chainbridge-utils/core"
 	"github.com/Phala-Network/chainbridge-utils/keystore"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	ethtest "github.com/octopus-network/ChainBridge/shared/ethereum/testing"
 )
 
 func TestChain_ListenerShutdownOnFailure(t *testing.T) {
