@@ -4,6 +4,7 @@
 package ThreeArguments
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,29 +18,41 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
 )
 
+// ThreeArgumentsMetaData contains all meta data concerning the ThreeArguments contract.
+var ThreeArgumentsMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"argumentOne\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"int8\",\"name\":\"argumentTwo\",\"type\":\"int8\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"argumentThree\",\"type\":\"bool\"}],\"name\":\"ThreeArgumentsCalled\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"argumentOne\",\"type\":\"string\"},{\"internalType\":\"int8\",\"name\":\"argumentTwo\",\"type\":\"int8\"},{\"internalType\":\"bool\",\"name\":\"argumentThree\",\"type\":\"bool\"}],\"name\":\"threeArguments\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x608060405234801561001057600080fd5b5061015e806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80639280b90514610030575b600080fd5b6100ab6004803603606081101561004657600080fd5b81019060208101813564010000000081111561006157600080fd5b82018360208201111561007357600080fd5b8035906020019184600183028401116401000000008311171561009557600080fd5b9193509150803560000b906020013515156100ad565b005b7fd589183661fa75f94e2db32f4eb7ebb50f4154c160e15eb43f772a46f360a3a88484848460405180806020018460000b815260200183151581526020018281038252868682818152602001925080828437600083820152604051601f909101601f191690920182900397509095505050505050a15050505056fea2646970667358221220f873c4cb372938ae51f6f5a24f5faf55e8428c5a62ad539310b6ea465538268264736f6c634300060c0033",
+}
+
 // ThreeArgumentsABI is the input ABI used to generate the binding from.
-const ThreeArgumentsABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"argumentOne\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"int8\",\"name\":\"argumentTwo\",\"type\":\"int8\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"argumentThree\",\"type\":\"bool\"}],\"name\":\"ThreeArgumentsCalled\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"argumentOne\",\"type\":\"string\"},{\"internalType\":\"int8\",\"name\":\"argumentTwo\",\"type\":\"int8\"},{\"internalType\":\"bool\",\"name\":\"argumentThree\",\"type\":\"bool\"}],\"name\":\"threeArguments\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+// Deprecated: Use ThreeArgumentsMetaData.ABI instead.
+var ThreeArgumentsABI = ThreeArgumentsMetaData.ABI
 
 // ThreeArgumentsBin is the compiled bytecode used for deploying new contracts.
-const ThreeArgumentsBin = `608060405234801561001057600080fd5b5061015e806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80639280b90514610030575b600080fd5b6100ab6004803603606081101561004657600080fd5b81019060208101813564010000000081111561006157600080fd5b82018360208201111561007357600080fd5b8035906020019184600183028401116401000000008311171561009557600080fd5b9193509150803560000b906020013515156100ad565b005b7fd589183661fa75f94e2db32f4eb7ebb50f4154c160e15eb43f772a46f360a3a88484848460405180806020018460000b815260200183151581526020018281038252868682818152602001925080828437600083820152604051601f909101601f191690920182900397509095505050505050a15050505056fea2646970667358221220a60940e6f7d0490b5a1bb4cbfd5c9f9196a23be1214a4d631f9c2f746b66ed9464736f6c634300060c0033`
+// Deprecated: Use ThreeArgumentsMetaData.Bin instead.
+var ThreeArgumentsBin = ThreeArgumentsMetaData.Bin
 
 // DeployThreeArguments deploys a new Ethereum contract, binding an instance of ThreeArguments to it.
 func DeployThreeArguments(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ThreeArguments, error) {
-	parsed, err := abi.JSON(strings.NewReader(ThreeArgumentsABI))
+	parsed, err := ThreeArgumentsMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(ThreeArgumentsBin), backend)
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
+
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(ThreeArgumentsBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -154,7 +167,7 @@ func bindThreeArguments(address common.Address, caller bind.ContractCaller, tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ThreeArguments *ThreeArgumentsRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ThreeArguments *ThreeArgumentsRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ThreeArguments.Contract.ThreeArgumentsCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -173,7 +186,7 @@ func (_ThreeArguments *ThreeArgumentsRaw) Transact(opts *bind.TransactOpts, meth
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ThreeArguments *ThreeArgumentsCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ThreeArguments *ThreeArgumentsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ThreeArguments.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -331,4 +344,16 @@ func (_ThreeArguments *ThreeArgumentsFilterer) WatchThreeArgumentsCalled(opts *b
 			}
 		}
 	}), nil
+}
+
+// ParseThreeArgumentsCalled is a log parse operation binding the contract event 0xd589183661fa75f94e2db32f4eb7ebb50f4154c160e15eb43f772a46f360a3a8.
+//
+// Solidity: event ThreeArgumentsCalled(string argumentOne, int8 argumentTwo, bool argumentThree)
+func (_ThreeArguments *ThreeArgumentsFilterer) ParseThreeArgumentsCalled(log types.Log) (*ThreeArgumentsThreeArgumentsCalled, error) {
+	event := new(ThreeArgumentsThreeArgumentsCalled)
+	if err := _ThreeArguments.contract.UnpackLog(event, "ThreeArgumentsCalled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }

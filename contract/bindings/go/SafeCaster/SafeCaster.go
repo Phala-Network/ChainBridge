@@ -4,6 +4,7 @@
 package SafeCaster
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,29 +18,41 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
 )
 
+// SafeCasterMetaData contains all meta data concerning the SafeCaster contract.
+var SafeCasterMetaData = &bind.MetaData{
+	ABI: "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"input\",\"type\":\"uint256\"}],\"name\":\"toUint200\",\"outputs\":[{\"internalType\":\"uint200\",\"name\":\"\",\"type\":\"uint200\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}]",
+	Bin: "0x608060405234801561001057600080fd5b50610105806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063720ad67414602d575b600080fd5b604760048036036020811015604157600080fd5b50356063565b604080516001600160c81b039092168252519081900360200190f35b6000606c826072565b92915050565b6000600160c81b821060cb576040805162461bcd60e51b815260206004820152601e60248201527f76616c756520646f6573206e6f742066697420696e2032303020626974730000604482015290519081900360640190fd5b509056fea26469706673582212201b9720cab50db25fce506a438b8d8aebc48e87401e69675ec0d69b7eb684596a64736f6c634300060c0033",
+}
+
 // SafeCasterABI is the input ABI used to generate the binding from.
-const SafeCasterABI = "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"input\",\"type\":\"uint256\"}],\"name\":\"toUint200\",\"outputs\":[{\"internalType\":\"uint200\",\"name\":\"\",\"type\":\"uint200\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}]"
+// Deprecated: Use SafeCasterMetaData.ABI instead.
+var SafeCasterABI = SafeCasterMetaData.ABI
 
 // SafeCasterBin is the compiled bytecode used for deploying new contracts.
-const SafeCasterBin = `608060405234801561001057600080fd5b50610105806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063720ad67414602d575b600080fd5b604760048036036020811015604157600080fd5b50356063565b604080516001600160c81b039092168252519081900360200190f35b6000606c826072565b92915050565b6000600160c81b821060cb576040805162461bcd60e51b815260206004820152601e60248201527f76616c756520646f6573206e6f742066697420696e2032303020626974730000604482015290519081900360640190fd5b509056fea26469706673582212203791c86dcd753f39409cd4529c85d8b611f5c6cf01931a49048751482827c05064736f6c634300060c0033`
+// Deprecated: Use SafeCasterMetaData.Bin instead.
+var SafeCasterBin = SafeCasterMetaData.Bin
 
 // DeploySafeCaster deploys a new Ethereum contract, binding an instance of SafeCaster to it.
 func DeploySafeCaster(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *SafeCaster, error) {
-	parsed, err := abi.JSON(strings.NewReader(SafeCasterABI))
+	parsed, err := SafeCasterMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(SafeCasterBin), backend)
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
+
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(SafeCasterBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -154,7 +167,7 @@ func bindSafeCaster(address common.Address, caller bind.ContractCaller, transact
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_SafeCaster *SafeCasterRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_SafeCaster *SafeCasterRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _SafeCaster.Contract.SafeCasterCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -173,7 +186,7 @@ func (_SafeCaster *SafeCasterRaw) Transact(opts *bind.TransactOpts, method strin
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_SafeCaster *SafeCasterCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_SafeCaster *SafeCasterCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _SafeCaster.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -188,23 +201,33 @@ func (_SafeCaster *SafeCasterTransactorRaw) Transact(opts *bind.TransactOpts, me
 	return _SafeCaster.Contract.contract.Transact(opts, method, params...)
 }
 
-// ToUint200 is a paid mutator transaction binding the contract method 0x720ad674.
+// ToUint200 is a free data retrieval call binding the contract method 0x720ad674.
 //
-// Solidity: function toUint200(uint256 input) returns(uint200)
-func (_SafeCaster *SafeCasterTransactor) ToUint200(opts *bind.TransactOpts, input *big.Int) (*types.Transaction, error) {
-	return _SafeCaster.contract.Transact(opts, "toUint200", input)
+// Solidity: function toUint200(uint256 input) pure returns(uint200)
+func (_SafeCaster *SafeCasterCaller) ToUint200(opts *bind.CallOpts, input *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _SafeCaster.contract.Call(opts, &out, "toUint200", input)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
 }
 
-// ToUint200 is a paid mutator transaction binding the contract method 0x720ad674.
+// ToUint200 is a free data retrieval call binding the contract method 0x720ad674.
 //
-// Solidity: function toUint200(uint256 input) returns(uint200)
-func (_SafeCaster *SafeCasterSession) ToUint200(input *big.Int) (*types.Transaction, error) {
-	return _SafeCaster.Contract.ToUint200(&_SafeCaster.TransactOpts, input)
+// Solidity: function toUint200(uint256 input) pure returns(uint200)
+func (_SafeCaster *SafeCasterSession) ToUint200(input *big.Int) (*big.Int, error) {
+	return _SafeCaster.Contract.ToUint200(&_SafeCaster.CallOpts, input)
 }
 
-// ToUint200 is a paid mutator transaction binding the contract method 0x720ad674.
+// ToUint200 is a free data retrieval call binding the contract method 0x720ad674.
 //
-// Solidity: function toUint200(uint256 input) returns(uint200)
-func (_SafeCaster *SafeCasterTransactorSession) ToUint200(input *big.Int) (*types.Transaction, error) {
-	return _SafeCaster.Contract.ToUint200(&_SafeCaster.TransactOpts, input)
+// Solidity: function toUint200(uint256 input) pure returns(uint200)
+func (_SafeCaster *SafeCasterCallerSession) ToUint200(input *big.Int) (*big.Int, error) {
+	return _SafeCaster.Contract.ToUint200(&_SafeCaster.CallOpts, input)
 }

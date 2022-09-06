@@ -4,6 +4,7 @@
 package WithDepositer
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,29 +18,41 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
 )
 
+// WithDepositerMetaData contains all meta data concerning the WithDepositer contract.
+var WithDepositerMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"argumentOne\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"argumentTwo\",\"type\":\"uint256\"}],\"name\":\"WithDepositerCalled\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"argumentOne\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"argumentTwo\",\"type\":\"uint256\"}],\"name\":\"withDepositer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x6080604052348015600f57600080fd5b5060d68061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80630a357c4f14602d575b600080fd5b605660048036036040811015604157600080fd5b506001600160a01b0381351690602001356058565b005b604080516001600160a01b03841681526020810183905281517f0c190bb7953fe744192f379d4b36b025584bb5f386755d164648a99b8ff9e5bb929181900390910190a1505056fea2646970667358221220ad208175e56fe0394f2bc26a74fdfca7de5aecba84b64d1f7d3a97ff526208d764736f6c634300060c0033",
+}
+
 // WithDepositerABI is the input ABI used to generate the binding from.
-const WithDepositerABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"argumentOne\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"argumentTwo\",\"type\":\"uint256\"}],\"name\":\"WithDepositerCalled\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"argumentOne\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"argumentTwo\",\"type\":\"uint256\"}],\"name\":\"withDepositer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+// Deprecated: Use WithDepositerMetaData.ABI instead.
+var WithDepositerABI = WithDepositerMetaData.ABI
 
 // WithDepositerBin is the compiled bytecode used for deploying new contracts.
-const WithDepositerBin = `6080604052348015600f57600080fd5b5060d68061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80630a357c4f14602d575b600080fd5b605660048036036040811015604157600080fd5b506001600160a01b0381351690602001356058565b005b604080516001600160a01b03841681526020810183905281517f0c190bb7953fe744192f379d4b36b025584bb5f386755d164648a99b8ff9e5bb929181900390910190a1505056fea2646970667358221220f856b2c498a2ede8fe5447877838f407988c7281dcec71aa571b7aff44268e6864736f6c634300060c0033`
+// Deprecated: Use WithDepositerMetaData.Bin instead.
+var WithDepositerBin = WithDepositerMetaData.Bin
 
 // DeployWithDepositer deploys a new Ethereum contract, binding an instance of WithDepositer to it.
 func DeployWithDepositer(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *WithDepositer, error) {
-	parsed, err := abi.JSON(strings.NewReader(WithDepositerABI))
+	parsed, err := WithDepositerMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(WithDepositerBin), backend)
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
+
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(WithDepositerBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -154,7 +167,7 @@ func bindWithDepositer(address common.Address, caller bind.ContractCaller, trans
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_WithDepositer *WithDepositerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_WithDepositer *WithDepositerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _WithDepositer.Contract.WithDepositerCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -173,7 +186,7 @@ func (_WithDepositer *WithDepositerRaw) Transact(opts *bind.TransactOpts, method
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_WithDepositer *WithDepositerCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_WithDepositer *WithDepositerCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _WithDepositer.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -330,4 +343,16 @@ func (_WithDepositer *WithDepositerFilterer) WatchWithDepositerCalled(opts *bind
 			}
 		}
 	}), nil
+}
+
+// ParseWithDepositerCalled is a log parse operation binding the contract event 0x0c190bb7953fe744192f379d4b36b025584bb5f386755d164648a99b8ff9e5bb.
+//
+// Solidity: event WithDepositerCalled(address argumentOne, uint256 argumentTwo)
+func (_WithDepositer *WithDepositerFilterer) ParseWithDepositerCalled(log types.Log) (*WithDepositerWithDepositerCalled, error) {
+	event := new(WithDepositerWithDepositerCalled)
+	if err := _WithDepositer.contract.UnpackLog(event, "WithDepositerCalled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
