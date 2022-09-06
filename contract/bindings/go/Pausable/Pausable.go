@@ -4,6 +4,7 @@
 package Pausable
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,18 +18,24 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
 )
 
+// PausableMetaData contains all meta data concerning the Pausable contract.
+var PausableMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+}
+
 // PausableABI is the input ABI used to generate the binding from.
-const PausableABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]"
+// Deprecated: Use PausableMetaData.ABI instead.
+var PausableABI = PausableMetaData.ABI
 
 // Pausable is an auto generated Go binding around an Ethereum contract.
 type Pausable struct {
@@ -138,7 +145,7 @@ func bindPausable(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Pausable *PausableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Pausable *PausableRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Pausable.Contract.PausableCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -157,7 +164,7 @@ func (_Pausable *PausableRaw) Transact(opts *bind.TransactOpts, method string, p
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Pausable *PausableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Pausable *PausableCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Pausable.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -172,25 +179,35 @@ func (_Pausable *PausableTransactorRaw) Transact(opts *bind.TransactOpts, method
 	return _Pausable.Contract.contract.Transact(opts, method, params...)
 }
 
-// Paused is a paid mutator transaction binding the contract method 0x5c975abb.
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
-// Solidity: function paused() returns(bool)
-func (_Pausable *PausableTransactor) Paused(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Pausable.contract.Transact(opts, "paused")
+// Solidity: function paused() view returns(bool)
+func (_Pausable *PausableCaller) Paused(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _Pausable.contract.Call(opts, &out, "paused")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
 }
 
-// Paused is a paid mutator transaction binding the contract method 0x5c975abb.
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
-// Solidity: function paused() returns(bool)
-func (_Pausable *PausableSession) Paused() (*types.Transaction, error) {
-	return _Pausable.Contract.Paused(&_Pausable.TransactOpts)
+// Solidity: function paused() view returns(bool)
+func (_Pausable *PausableSession) Paused() (bool, error) {
+	return _Pausable.Contract.Paused(&_Pausable.CallOpts)
 }
 
-// Paused is a paid mutator transaction binding the contract method 0x5c975abb.
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
-// Solidity: function paused() returns(bool)
-func (_Pausable *PausableTransactorSession) Paused() (*types.Transaction, error) {
-	return _Pausable.Contract.Paused(&_Pausable.TransactOpts)
+// Solidity: function paused() view returns(bool)
+func (_Pausable *PausableCallerSession) Paused() (bool, error) {
+	return _Pausable.Contract.Paused(&_Pausable.CallOpts)
 }
 
 // PausablePausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the Pausable contract.
@@ -315,6 +332,18 @@ func (_Pausable *PausableFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<-
 	}), nil
 }
 
+// ParsePaused is a log parse operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+//
+// Solidity: event Paused(address account)
+func (_Pausable *PausableFilterer) ParsePaused(log types.Log) (*PausablePaused, error) {
+	event := new(PausablePaused)
+	if err := _Pausable.contract.UnpackLog(event, "Paused", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // PausableUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the Pausable contract.
 type PausableUnpausedIterator struct {
 	Event *PausableUnpaused // Event containing the contract specifics and raw log
@@ -435,4 +464,16 @@ func (_Pausable *PausableFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan
 			}
 		}
 	}), nil
+}
+
+// ParseUnpaused is a log parse operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+//
+// Solidity: event Unpaused(address account)
+func (_Pausable *PausableFilterer) ParseUnpaused(log types.Log) (*PausableUnpaused, error) {
+	event := new(PausableUnpaused)
+	if err := _Pausable.contract.UnpackLog(event, "Unpaused", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }

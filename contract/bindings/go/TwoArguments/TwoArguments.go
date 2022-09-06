@@ -4,6 +4,7 @@
 package TwoArguments
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,29 +18,41 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
 )
 
+// TwoArgumentsMetaData contains all meta data concerning the TwoArguments contract.
+var TwoArgumentsMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"argumentOne\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"argumentTwo\",\"type\":\"bytes4\"}],\"name\":\"TwoArgumentsCalled\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"argumentOne\",\"type\":\"address[]\"},{\"internalType\":\"bytes4\",\"name\":\"argumentTwo\",\"type\":\"bytes4\"}],\"name\":\"twoArguments\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x608060405234801561001057600080fd5b5061015c806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c806372e0745c14610030575b600080fd5b6100aa6004803603604081101561004657600080fd5b81019060208101813564010000000081111561006157600080fd5b82018360208201111561007357600080fd5b8035906020019184602083028401116401000000008311171561009557600080fd5b9193509150356001600160e01b0319166100ac565b005b7fc983106aca50fad459fb18ede1630e8ff8147ff28ad451a856427931fd7f15e38383836040518080602001836001600160e01b03191681526020018281038252858582818152602001925060200280828437600083820152604051601f909101601f1916909201829003965090945050505050a150505056fea264697066735822122035018a103533c27b81a5384304145f28ae823dfb3bf91ffbb6dcb82156996f6e64736f6c634300060c0033",
+}
+
 // TwoArgumentsABI is the input ABI used to generate the binding from.
-const TwoArgumentsABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"argumentOne\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"argumentTwo\",\"type\":\"bytes4\"}],\"name\":\"TwoArgumentsCalled\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"argumentOne\",\"type\":\"address[]\"},{\"internalType\":\"bytes4\",\"name\":\"argumentTwo\",\"type\":\"bytes4\"}],\"name\":\"twoArguments\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+// Deprecated: Use TwoArgumentsMetaData.ABI instead.
+var TwoArgumentsABI = TwoArgumentsMetaData.ABI
 
 // TwoArgumentsBin is the compiled bytecode used for deploying new contracts.
-const TwoArgumentsBin = `608060405234801561001057600080fd5b5061015c806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c806372e0745c14610030575b600080fd5b6100aa6004803603604081101561004657600080fd5b81019060208101813564010000000081111561006157600080fd5b82018360208201111561007357600080fd5b8035906020019184602083028401116401000000008311171561009557600080fd5b9193509150356001600160e01b0319166100ac565b005b7fc983106aca50fad459fb18ede1630e8ff8147ff28ad451a856427931fd7f15e38383836040518080602001836001600160e01b03191681526020018281038252858582818152602001925060200280828437600083820152604051601f909101601f1916909201829003965090945050505050a150505056fea2646970667358221220d1fdc9c0bd7aab9e226c08d8bc0b01979f9194b00d1002e39efc4b3a32f9d65a64736f6c634300060c0033`
+// Deprecated: Use TwoArgumentsMetaData.Bin instead.
+var TwoArgumentsBin = TwoArgumentsMetaData.Bin
 
 // DeployTwoArguments deploys a new Ethereum contract, binding an instance of TwoArguments to it.
 func DeployTwoArguments(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *TwoArguments, error) {
-	parsed, err := abi.JSON(strings.NewReader(TwoArgumentsABI))
+	parsed, err := TwoArgumentsMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(TwoArgumentsBin), backend)
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
+
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(TwoArgumentsBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -154,7 +167,7 @@ func bindTwoArguments(address common.Address, caller bind.ContractCaller, transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_TwoArguments *TwoArgumentsRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_TwoArguments *TwoArgumentsRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _TwoArguments.Contract.TwoArgumentsCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -173,7 +186,7 @@ func (_TwoArguments *TwoArgumentsRaw) Transact(opts *bind.TransactOpts, method s
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_TwoArguments *TwoArgumentsCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_TwoArguments *TwoArgumentsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _TwoArguments.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -330,4 +343,16 @@ func (_TwoArguments *TwoArgumentsFilterer) WatchTwoArgumentsCalled(opts *bind.Wa
 			}
 		}
 	}), nil
+}
+
+// ParseTwoArgumentsCalled is a log parse operation binding the contract event 0xc983106aca50fad459fb18ede1630e8ff8147ff28ad451a856427931fd7f15e3.
+//
+// Solidity: event TwoArgumentsCalled(address[] argumentOne, bytes4 argumentTwo)
+func (_TwoArguments *TwoArgumentsFilterer) ParseTwoArgumentsCalled(log types.Log) (*TwoArgumentsTwoArgumentsCalled, error) {
+	event := new(TwoArgumentsTwoArgumentsCalled)
+	if err := _TwoArguments.contract.UnpackLog(event, "TwoArgumentsCalled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }

@@ -4,6 +4,7 @@
 package NoArgument
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,29 +18,41 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
 )
 
+// NoArgumentMetaData contains all meta data concerning the NoArgument contract.
+var NoArgumentMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[],\"name\":\"NoArgumentCalled\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"noArgument\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x6080604052348015600f57600080fd5b5060968061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063568959ca14602d575b600080fd5b60336035565b005b6040517fc582abe1670c5a7f7cad8f171e4af03c793dd9f59fee6714179f56b6e9aea26f90600090a156fea2646970667358221220aa9abd49a9fe8b2cff6bb4afd5e6c538304f52014304163ad2585ad319177ea064736f6c634300060c0033",
+}
+
 // NoArgumentABI is the input ABI used to generate the binding from.
-const NoArgumentABI = "[{\"anonymous\":false,\"inputs\":[],\"name\":\"NoArgumentCalled\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"noArgument\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+// Deprecated: Use NoArgumentMetaData.ABI instead.
+var NoArgumentABI = NoArgumentMetaData.ABI
 
 // NoArgumentBin is the compiled bytecode used for deploying new contracts.
-const NoArgumentBin = `6080604052348015600f57600080fd5b5060968061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063568959ca14602d575b600080fd5b60336035565b005b6040517fc582abe1670c5a7f7cad8f171e4af03c793dd9f59fee6714179f56b6e9aea26f90600090a156fea26469706673582212203f2847179bf7f6c9f2ff3cf2590f22e6d4361b782f29a783b317327ba65b9b7e64736f6c634300060c0033`
+// Deprecated: Use NoArgumentMetaData.Bin instead.
+var NoArgumentBin = NoArgumentMetaData.Bin
 
 // DeployNoArgument deploys a new Ethereum contract, binding an instance of NoArgument to it.
 func DeployNoArgument(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *NoArgument, error) {
-	parsed, err := abi.JSON(strings.NewReader(NoArgumentABI))
+	parsed, err := NoArgumentMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(NoArgumentBin), backend)
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
+
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(NoArgumentBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -154,7 +167,7 @@ func bindNoArgument(address common.Address, caller bind.ContractCaller, transact
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_NoArgument *NoArgumentRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_NoArgument *NoArgumentRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _NoArgument.Contract.NoArgumentCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -173,7 +186,7 @@ func (_NoArgument *NoArgumentRaw) Transact(opts *bind.TransactOpts, method strin
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_NoArgument *NoArgumentCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_NoArgument *NoArgumentCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _NoArgument.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -328,4 +341,16 @@ func (_NoArgument *NoArgumentFilterer) WatchNoArgumentCalled(opts *bind.WatchOpt
 			}
 		}
 	}), nil
+}
+
+// ParseNoArgumentCalled is a log parse operation binding the contract event 0xc582abe1670c5a7f7cad8f171e4af03c793dd9f59fee6714179f56b6e9aea26f.
+//
+// Solidity: event NoArgumentCalled()
+func (_NoArgument *NoArgumentFilterer) ParseNoArgumentCalled(log types.Log) (*NoArgumentNoArgumentCalled, error) {
+	event := new(NoArgumentNoArgumentCalled)
+	if err := _NoArgument.contract.UnpackLog(event, "NoArgumentCalled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
