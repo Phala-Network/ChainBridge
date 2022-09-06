@@ -7,21 +7,24 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"math/big"
+	"strings"
 	"time"
 
 	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
-	"github.com/Phala-Network/chainbridge-utils/msg"
+	//"github.com/Phala-Network/chainbridge-utils/msg"
 	eth "github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	//"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	ethcommon "github.com/ethereum/go-ethereum/common"
-	"github.com/octopus-network/ChainBridge/bindings/Bridge"
+	//"github.com/octopus-network/ChainBridge/bindings/Bridge"
 	"github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
 	"github.com/octopus-network/ChainBridge/bindings/ERC721Handler"
 	"github.com/octopus-network/ChainBridge/bindings/GenericHandler"
 	"github.com/octopus-network/ChainBridge/chains"
+	"github.com/octopus-network/ChainBridge/contract/bindings/go/Bridge"
 	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
@@ -120,7 +123,8 @@ func (l *listener) pollBlocks() error {
 			}
 
 			// Sleep if the difference is less than BlockDelay; (latest - current) < BlockDelay
-			if big.NewInt(0).Sub(latestBlock, currentBlock).Cmp(l.blockConfirmations) == -1 {
+			//if big.NewInt(0).Sub(latestBlock, currentBlock).Cmp(l.blockConfirmations) == -1 {
+			if big.NewInt(0).Sub(latestBlock, currentBlock).Cmp(big.NewInt(1)) == -1 {
 				l.log.Debug("Block not ready, will retry", "target", currentBlock, "latest", latestBlock)
 				time.Sleep(BlockRetryInterval)
 				continue
@@ -168,35 +172,48 @@ func (l *listener) getDepositEventsForBlock(latestBlock *big.Int) error {
 
 	// read through the log events and handle their deposit event if handler is recognized
 	for _, log := range logs {
-		var m msg.Message
-		destId := msg.ChainId(log.Topics[1].Big().Uint64())
-		rId := msg.ResourceIdFromSlice(log.Topics[2].Bytes())
-		nonce := msg.Nonce(log.Topics[3].Big().Uint64())
+		//var m msg.Message
+		//destId := msg.ChainId(log.Topics[1].Big().Uint64())
+		//rId := msg.ResourceIdFromSlice(log.Topics[2].Bytes())
+		//nonce := msg.Nonce(log.Topics[3].Big().Uint64())
 
-		addr, err := l.bridgeContract.ResourceIDToHandlerAddress(&bind.CallOpts{From: l.conn.Keypair().CommonAddress()}, rId)
+		l.log.Debug("Querying block for deposit events", "log", log)
+
+		bridgeAbi, err := abi.JSON(strings.NewReader(string(Bridge.BridgeABI)))
 		if err != nil {
-			return fmt.Errorf("failed to get handler from resource ID %x", rId)
+			return fmt.Errorf("failed to read abi from Bridge.go")
 		}
 
-		if addr == l.cfg.erc20HandlerContract {
-			m, err = l.handleErc20DepositedEvent(destId, nonce)
-		} else if addr == l.cfg.erc721HandlerContract {
-			m, err = l.handleErc721DepositedEvent(destId, nonce)
-		} else if addr == l.cfg.genericHandlerContract {
-			m, err = l.handleGenericDepositedEvent(destId, nonce)
-		} else {
-			l.log.Error("event has unrecognized handler", "handler", addr.Hex())
-			return nil
-		}
-
+		_out, err := bridgeAbi.Unpack("Deposit", log.Data)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to unpack event")
 		}
+		l.log.Debug("parsed event", "event", _out)
 
-		err = l.router.Send(m)
-		if err != nil {
-			l.log.Error("subscription error: failed to route message", "err", err)
-		}
+		//addr, err := l.bridgeContract.ResourceIDToHandlerAddress(&bind.CallOpts{From: l.conn.Keypair().CommonAddress()}, rId)
+		//if err != nil {
+		//	return fmt.Errorf("failed to get handler from resource ID %x", rId)
+		//}
+
+		/*		if addr == l.cfg.erc20HandlerContract {
+					m, err = l.handleErc20DepositedEvent(destId, nonce)
+				} else if addr == l.cfg.erc721HandlerContract {
+					m, err = l.handleErc721DepositedEvent(destId, nonce)
+				} else if addr == l.cfg.genericHandlerContract {
+					m, err = l.handleGenericDepositedEvent(destId, nonce)
+				} else {
+					l.log.Error("event has unrecognized handler", "handler", addr.Hex())
+					return nil
+				}
+
+				if err != nil {
+					return err
+				}
+
+				err = l.router.Send(m)
+				if err != nil {
+					l.log.Error("subscription error: failed to route message", "err", err)
+				}*/
 	}
 
 	return nil
@@ -204,6 +221,7 @@ func (l *listener) getDepositEventsForBlock(latestBlock *big.Int) error {
 
 // buildQuery constructs a query for the bridgeContract by hashing sig to get the event topic
 func buildQuery(contract ethcommon.Address, sig utils.EventSig, startBlock *big.Int, endBlock *big.Int) eth.FilterQuery {
+	log15.Debug("buildQuery", "contract", contract, "GetTopic", sig.GetTopic(), "startBlock", startBlock, "endBlock", endBlock)
 	query := eth.FilterQuery{
 		FromBlock: startBlock,
 		ToBlock:   endBlock,
