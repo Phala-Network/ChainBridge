@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Phala-Network/chainbridge-utils/crypto/secp256k1"
 	"github.com/ChainSafe/log15"
+	"github.com/Phala-Network/chainbridge-utils/crypto/secp256k1"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
@@ -102,8 +102,8 @@ func (c *Connection) newTransactOpts(value, gasLimit, gasPrice *big.Int) (*bind.
 
 	auth.Nonce = big.NewInt(int64(nonce))
 	auth.Value = value
-	auth.GasLimit = uint64(gasLimit.Int64())
-	auth.GasPrice = gasPrice
+	//auth.GasLimit = uint64(gasLimit.Int64())
+	//auth.GasPrice = gasPrice
 	auth.Context = context.Background()
 
 	return auth, nonce, nil
@@ -161,11 +161,11 @@ func multiplyGasPrice(gasEstimate *big.Int, gasMultiplier *big.Float) *big.Int {
 func (c *Connection) LockAndUpdateOpts() error {
 	c.optsLock.Lock()
 
-	gasPrice, err := c.SafeEstimateGas(context.TODO())
-	if err != nil {
-		return err
-	}
-	c.opts.GasPrice = gasPrice
+	//gasPrice, err := c.SafeEstimateGas(context.TODO())
+	//if err != nil {
+	//	return err
+	//}
+	//c.opts.GasPrice = gasPrice
 
 	nonce, err := c.conn.PendingNonceAt(context.Background(), c.opts.From)
 	if err != nil {

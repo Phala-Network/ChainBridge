@@ -6,7 +6,10 @@ package ethereum
 import (
 	"context"
 	"errors"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
 	"math/big"
+	"strings"
 	"time"
 
 	log "github.com/ChainSafe/log15"
@@ -197,7 +200,7 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 		default:
 			// watch for the lastest block, retry up to BlockRetryLimit times
 			for waitRetrys := 0; waitRetrys < BlockRetryLimit; waitRetrys++ {
-				err := w.conn.WaitForBlock(latestBlock, w.cfg.blockConfirmations)
+				err := w.conn.WaitForBlock(latestBlock, big.NewInt(0))
 				if err != nil {
 					w.log.Error("Waiting for block failed", "err", err)
 					// Exit if retries exceeded
@@ -213,17 +216,41 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 
 			// query for logs
 			query := buildQuery(w.cfg.bridgeContract, utils.ProposalEvent, latestBlock, latestBlock)
+			w.log.Debug("querying for proposal event", "query", query)
+			//query.Topics = nil
 			evts, err := w.conn.Client().FilterLogs(context.Background(), query)
 			if err != nil {
 				w.log.Error("Failed to fetch logs", "err", err)
 				return
 			}
 
+			bridgeAbi, err := abi.JSON(strings.NewReader(string(Bridge.BridgeABI)))
+			if err != nil {
+				w.log.Error("err", "err", err)
+				return
+			}
+
 			// execute the proposal once we find the matching finalized event
 			for _, evt := range evts {
-				sourceId := evt.Topics[1].Big().Uint64()
-				depositNonce := evt.Topics[2].Big().Uint64()
-				status := evt.Topics[3].Big().Uint64()
+				w.log.Debug("watching for proposal event", "event", evt)
+
+				//event := struct {
+				//	OriginChainID uint8
+				//	DepositNonce  uint64
+				//	Status        uint8
+				//	DataHash      [32]byte
+				//}{}
+
+				event, err := bridgeAbi.Unpack("ProposalEvent", evt.Data)
+				if err != nil {
+					w.log.Error("err", "err", err)
+					return
+				}
+				w.log.Debug("parse for proposal event", "event", event)
+
+				sourceId := event[0].(uint8)
+				depositNonce := event[1].(uint64)
+				status := event[2].(uint8)
 
 				if m.Source == msg.ChainId(sourceId) &&
 					m.DepositNonce.Big().Uint64() == depositNonce &&
@@ -233,6 +260,10 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 				} else {
 					w.log.Trace("Ignoring event", "src", sourceId, "nonce", depositNonce)
 				}
+				/*				sourceId := evt.Topics[1].Big().Uint64()
+								depositNonce := evt.Topics[2].Big().Uint64()
+								status := evt.Topics[3].Big().Uint64()
+				*/
 			}
 			w.log.Trace("No finalization event found in current block", "block", latestBlock, "src", m.Source, "nonce", m.DepositNonce)
 			latestBlock = latestBlock.Add(latestBlock, big.NewInt(1))
@@ -254,6 +285,10 @@ func (w *writer) voteProposal(m msg.Message, dataHash [32]byte) {
 				w.log.Error("Failed to update tx opts", "err", err)
 				continue
 			}
+			w.log.Info("In voteProposal", "w", w)
+			w.log.Info("In voteProposal", "w.conn", w.conn)
+			w.log.Info("In voteProposal", "w.conn.Opts()", w.conn.Opts())
+			w.log.Info("In voteProposal", "w.conn.CallOpts()", w.conn.CallOpts())
 
 			tx, err := w.bridgeContract.VoteProposal(
 				w.conn.Opts(),

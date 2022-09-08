@@ -4,6 +4,7 @@
 package ERC721Safe
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,6 +18,7 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
@@ -26,20 +28,31 @@ var (
 	_ = event.NewSubscription
 )
 
+// ERC721SafeMetaData contains all meta data concerning the ERC721Safe contract.
+var ERC721SafeMetaData = &bind.MetaData{
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"fundERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x608060405234801561001057600080fd5b5061010c806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80637354298014602d575b600080fd5b606060048036036060811015604157600080fd5b506001600160a01b038135811691602081013590911690604001356062565b005b604080516323b872dd60e01b81526001600160a01b03848116600483015230602483015260448201849052915185928316916323b872dd91606480830192600092919082900301818387803b15801560b957600080fd5b505af115801560cc573d6000803e3d6000fd5b505050505050505056fea264697066735822122098ad8106ecd48941bc009d95380c057ede6200ae98ae9c2ae64fe32ed0190d0864736f6c634300060c0033",
+}
+
 // ERC721SafeABI is the input ABI used to generate the binding from.
-const ERC721SafeABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"fundERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+// Deprecated: Use ERC721SafeMetaData.ABI instead.
+var ERC721SafeABI = ERC721SafeMetaData.ABI
 
 // ERC721SafeBin is the compiled bytecode used for deploying new contracts.
-var ERC721SafeBin = "0x608060405234801561001057600080fd5b50610186806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80637354298014610030575b600080fd5b61009c6004803603606081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061009e565b005b60008390508073ffffffffffffffffffffffffffffffffffffffff166323b872dd8430856040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019350505050600060405180830381600087803b15801561013257600080fd5b505af1158015610146573d6000803e3d6000fd5b505050505050505056fea26469706673582212208c93a5e2913583ff3d9d7403d3c9c7d80465a0f9d6d4426681451cb42b9aeee564736f6c63430007000033"
+// Deprecated: Use ERC721SafeMetaData.Bin instead.
+var ERC721SafeBin = ERC721SafeMetaData.Bin
 
 // DeployERC721Safe deploys a new Ethereum contract, binding an instance of ERC721Safe to it.
 func DeployERC721Safe(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ERC721Safe, error) {
-	parsed, err := abi.JSON(strings.NewReader(ERC721SafeABI))
+	parsed, err := ERC721SafeMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
 
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(ERC721SafeBin), backend)
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(ERC721SafeBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}

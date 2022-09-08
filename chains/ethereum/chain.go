@@ -108,7 +108,14 @@ func InitializeChain(chainCfg *core.ChainConfig, logger log15.Logger, sysErr cha
 
 	stop := make(chan int)
 	conn := connection.NewConnection(cfg.endpoint, cfg.http, kp, logger, cfg.gasLimit, cfg.maxGasPrice, cfg.gasMultiplier)
+	/*	f := new(big.Float)
+		f.SetString("1.11")
+		conn.GasMultiplier = f
+		i := big.NewInt(20)
+		conn.MaxGasPrice = i*/
+
 	err = conn.Connect()
+	log15.Trace("InitializeChain", "cfg", cfg, "conn", conn)
 	if err != nil {
 		return nil, err
 	}

@@ -188,7 +188,7 @@ func run(ctx *cli.Context) error {
 		var m *metrics.ChainMetrics
 
 		logger := log.Root().New("chain", chainConfig.Name)
-
+		log.Trace("run", "chainConfig", chainConfig)
 		if ctx.Bool(config.MetricsFlag.Name) {
 			m = metrics.NewChainMetrics(chain.Name)
 		}
