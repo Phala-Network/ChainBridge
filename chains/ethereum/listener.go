@@ -17,9 +17,7 @@ import (
 	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
-	//"github.com/Phala-Network/chainbridge-utils/msg"
 	eth "github.com/ethereum/go-ethereum"
-	//"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/octopus-network/ChainBridge/bindings/Bridge"
 	"github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
@@ -164,7 +162,6 @@ func (l *listener) pollBlocks() error {
 func (l *listener) getDepositEventsForBlock(latestBlock *big.Int) error {
 	l.log.Debug("Querying block for deposit events", "block", latestBlock)
 	query := buildQuery(l.cfg.bridgeContract, utils.Deposit, latestBlock, latestBlock)
-	//query := buildQuery(l.cfg.bridgeContract, utils.Deposit, latestBlock, latestBlock.Add(latestBlock, big.NewInt(1)))
 
 	// querying for logs
 	logs, err := l.conn.Client().FilterLogs(context.Background(), query)

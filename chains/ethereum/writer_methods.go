@@ -217,7 +217,7 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 			// query for logs
 			query := buildQuery(w.cfg.bridgeContract, utils.ProposalEvent, latestBlock, latestBlock)
 			w.log.Debug("querying for proposal event", "query", query)
-			//query.Topics = nil
+
 			evts, err := w.conn.Client().FilterLogs(context.Background(), query)
 			if err != nil {
 				w.log.Error("Failed to fetch logs", "err", err)
@@ -233,13 +233,6 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 			// execute the proposal once we find the matching finalized event
 			for _, evt := range evts {
 				w.log.Debug("watching for proposal event", "event", evt)
-
-				//event := struct {
-				//	OriginChainID uint8
-				//	DepositNonce  uint64
-				//	Status        uint8
-				//	DataHash      [32]byte
-				//}{}
 
 				event, err := bridgeAbi.Unpack("ProposalEvent", evt.Data)
 				if err != nil {
@@ -260,10 +253,6 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 				} else {
 					w.log.Trace("Ignoring event", "src", sourceId, "nonce", depositNonce)
 				}
-				/*				sourceId := evt.Topics[1].Big().Uint64()
-								depositNonce := evt.Topics[2].Big().Uint64()
-								status := evt.Topics[3].Big().Uint64()
-				*/
 			}
 			w.log.Trace("No finalization event found in current block", "block", latestBlock, "src", m.Source, "nonce", m.DepositNonce)
 			latestBlock = latestBlock.Add(latestBlock, big.NewInt(1))
@@ -285,10 +274,10 @@ func (w *writer) voteProposal(m msg.Message, dataHash [32]byte) {
 				w.log.Error("Failed to update tx opts", "err", err)
 				continue
 			}
-			w.log.Info("In voteProposal", "w", w)
-			w.log.Info("In voteProposal", "w.conn", w.conn)
-			w.log.Info("In voteProposal", "w.conn.Opts()", w.conn.Opts())
-			w.log.Info("In voteProposal", "w.conn.CallOpts()", w.conn.CallOpts())
+			w.log.Trace("In voteProposal", "w", w)
+			w.log.Trace("In voteProposal", "w.conn", w.conn)
+			w.log.Trace("In voteProposal", "w.conn.Opts()", w.conn.Opts())
+			w.log.Trace("In voteProposal", "w.conn.CallOpts()", w.conn.CallOpts())
 
 			tx, err := w.bridgeContract.VoteProposal(
 				w.conn.Opts(),
