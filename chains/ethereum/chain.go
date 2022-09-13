@@ -24,21 +24,21 @@ import (
 	"fmt"
 	"math/big"
 
-	bridge "github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	erc20Handler "github.com/Phala-Network/ChainBridge/bindings/ERC20Handler"
-	erc721Handler "github.com/Phala-Network/ChainBridge/bindings/ERC721Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/GenericHandler"
-	connection "github.com/Phala-Network/ChainBridge/connections/ethereum"
+	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	"github.com/Phala-Network/chainbridge-utils/core"
 	"github.com/Phala-Network/chainbridge-utils/crypto/secp256k1"
 	"github.com/Phala-Network/chainbridge-utils/keystore"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ChainSafe/log15"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	bridge "github.com/octopus-network/ChainBridge/bindings/Bridge"
+	erc20Handler "github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
+	erc721Handler "github.com/octopus-network/ChainBridge/bindings/ERC721Handler"
+	"github.com/octopus-network/ChainBridge/bindings/GenericHandler"
+	connection "github.com/octopus-network/ChainBridge/connections/ethereum"
 )
 
 var _ core.Chain = &Chain{}
@@ -109,6 +109,7 @@ func InitializeChain(chainCfg *core.ChainConfig, logger log15.Logger, sysErr cha
 	stop := make(chan int)
 	conn := connection.NewConnection(cfg.endpoint, cfg.http, kp, logger, cfg.gasLimit, cfg.maxGasPrice, cfg.gasMultiplier)
 	err = conn.Connect()
+	log15.Trace("InitializeChain", "cfg", cfg, "conn", conn)
 	if err != nil {
 		return nil, err
 	}

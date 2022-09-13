@@ -4,6 +4,7 @@
 package CentrifugeAsset
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
@@ -17,6 +18,7 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
@@ -26,20 +28,31 @@ var (
 	_ = event.NewSubscription
 )
 
+// CentrifugeAssetMetaData contains all meta data concerning the CentrifugeAsset contract.
+var CentrifugeAssetMetaData = &bind.MetaData{
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"asset\",\"type\":\"bytes32\"}],\"name\":\"AssetStored\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"_assetsStored\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"asset\",\"type\":\"bytes32\"}],\"name\":\"store\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x608060405234801561001057600080fd5b5061029e806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063654cf88c1461003b57806396add60014610057575b600080fd5b61005560048036038101906100509190610177565b610087565b005b610071600480360381019061006c9190610177565b610142565b60405161007e91906101ef565b60405180910390f35b60008082815260200190815260200160002060009054906101000a900460ff16156100e7576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100de9061020a565b60405180910390fd5b600160008083815260200190815260200160002060006101000a81548160ff021916908315150217905550807f08ae553713effae7116be03743b167b8b803449ee8fb912c2ec43dc2c824f53560405160405180910390a250565b60006020528060005260406000206000915054906101000a900460ff1681565b60008135905061017181610251565b92915050565b60006020828403121561018957600080fd5b600061019784828501610162565b91505092915050565b6101a98161023b565b82525050565b60006101bc60178361022a565b91507f617373657420697320616c72656164792073746f7265640000000000000000006000830152602082019050919050565b600060208201905061020460008301846101a0565b92915050565b60006020820190508181036000830152610223816101af565b9050919050565b600082825260208201905092915050565b60008115159050919050565b6000819050919050565b61025a81610247565b811461026557600080fd5b5056fea2646970667358221220e16e8f4b1f2b2b5c9a31fee8339855d09e327b85b1c0a816e8a90e38411bf8c564736f6c63430007000033",
+}
+
 // CentrifugeAssetABI is the input ABI used to generate the binding from.
-const CentrifugeAssetABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"asset\",\"type\":\"bytes32\"}],\"name\":\"AssetStored\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"_assetsStored\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"asset\",\"type\":\"bytes32\"}],\"name\":\"store\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+// Deprecated: Use CentrifugeAssetMetaData.ABI instead.
+var CentrifugeAssetABI = CentrifugeAssetMetaData.ABI
 
 // CentrifugeAssetBin is the compiled bytecode used for deploying new contracts.
-var CentrifugeAssetBin = "0x608060405234801561001057600080fd5b5061029e806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063654cf88c1461003b57806396add60014610057575b600080fd5b61005560048036038101906100509190610177565b610087565b005b610071600480360381019061006c9190610177565b610142565b60405161007e91906101ef565b60405180910390f35b60008082815260200190815260200160002060009054906101000a900460ff16156100e7576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100de9061020a565b60405180910390fd5b600160008083815260200190815260200160002060006101000a81548160ff021916908315150217905550807f08ae553713effae7116be03743b167b8b803449ee8fb912c2ec43dc2c824f53560405160405180910390a250565b60006020528060005260406000206000915054906101000a900460ff1681565b60008135905061017181610251565b92915050565b60006020828403121561018957600080fd5b600061019784828501610162565b91505092915050565b6101a98161023b565b82525050565b60006101bc60178361022a565b91507f617373657420697320616c72656164792073746f7265640000000000000000006000830152602082019050919050565b600060208201905061020460008301846101a0565b92915050565b60006020820190508181036000830152610223816101af565b9050919050565b600082825260208201905092915050565b60008115159050919050565b6000819050919050565b61025a81610247565b811461026557600080fd5b5056fea264697066735822122022f6d5598be0981284c70c2e7e79b3ddf55e22f4b9f42453a906d052b765502264736f6c63430007000033"
+// Deprecated: Use CentrifugeAssetMetaData.Bin instead.
+var CentrifugeAssetBin = CentrifugeAssetMetaData.Bin
 
 // DeployCentrifugeAsset deploys a new Ethereum contract, binding an instance of CentrifugeAsset to it.
 func DeployCentrifugeAsset(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *CentrifugeAsset, error) {
-	parsed, err := abi.JSON(strings.NewReader(CentrifugeAssetABI))
+	parsed, err := CentrifugeAssetMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
+	if parsed == nil {
+		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
+	}
 
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(CentrifugeAssetBin), backend)
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(CentrifugeAssetBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}

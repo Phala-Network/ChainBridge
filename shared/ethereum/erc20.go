@@ -6,10 +6,10 @@ package utils
 import (
 	"math/big"
 
-	"github.com/Phala-Network/ChainBridge/bindings/ERC20Handler"
-	ERC20 "github.com/Phala-Network/ChainBridge/bindings/ERC20PresetMinterPauser"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
+	ERC20 "github.com/octopus-network/ChainBridge/bindings/ERC20PresetMinterPauser"
 )
 
 // DeployMintAndApprove deploys a new erc20 contract, mints to the deployer, and approves the erc20 handler to transfer those token.

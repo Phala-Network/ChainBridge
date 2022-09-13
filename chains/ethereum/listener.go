@@ -7,22 +7,22 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Phala-Network/chainbridge-utils/msg"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"math/big"
 	"time"
 
-	"github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC20Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/ERC721Handler"
-	"github.com/Phala-Network/ChainBridge/bindings/GenericHandler"
-	"github.com/Phala-Network/ChainBridge/chains"
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
+	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
-	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ChainSafe/log15"
 	eth "github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	ethcommon "github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/Bridge"
+	"github.com/octopus-network/ChainBridge/bindings/ERC20Handler"
+	"github.com/octopus-network/ChainBridge/bindings/ERC721Handler"
+	"github.com/octopus-network/ChainBridge/bindings/GenericHandler"
+	"github.com/octopus-network/ChainBridge/chains"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
 var BlockRetryInterval = time.Second * 5
@@ -120,7 +120,8 @@ func (l *listener) pollBlocks() error {
 			}
 
 			// Sleep if the difference is less than BlockDelay; (latest - current) < BlockDelay
-			if big.NewInt(0).Sub(latestBlock, currentBlock).Cmp(l.blockConfirmations) == -1 {
+			//if big.NewInt(0).Sub(latestBlock, currentBlock).Cmp(l.blockConfirmations) == -1 {
+			if big.NewInt(0).Sub(latestBlock, currentBlock).Cmp(big.NewInt(0)) == -1 {
 				l.log.Debug("Block not ready, will retry", "target", currentBlock, "latest", latestBlock)
 				time.Sleep(BlockRetryInterval)
 				continue
@@ -168,6 +169,8 @@ func (l *listener) getDepositEventsForBlock(latestBlock *big.Int) error {
 
 	// read through the log events and handle their deposit event if handler is recognized
 	for _, log := range logs {
+		l.log.Debug("Querying block for deposit events", "log", log)
+
 		var m msg.Message
 		destId := msg.ChainId(log.Topics[1].Big().Uint64())
 		rId := msg.ResourceIdFromSlice(log.Topics[2].Bytes())
@@ -204,6 +207,7 @@ func (l *listener) getDepositEventsForBlock(latestBlock *big.Int) error {
 
 // buildQuery constructs a query for the bridgeContract by hashing sig to get the event topic
 func buildQuery(contract ethcommon.Address, sig utils.EventSig, startBlock *big.Int, endBlock *big.Int) eth.FilterQuery {
+	log15.Debug("buildQuery", "contract", contract, "GetTopic", sig.GetTopic(), "startBlock", startBlock, "endBlock", endBlock)
 	query := eth.FilterQuery{
 		FromBlock: startBlock,
 		ToBlock:   endBlock,

@@ -10,13 +10,13 @@ import (
 	"time"
 
 	"github.com/ChainSafe/log15"
-	"github.com/Phala-Network/ChainBridge/chains"
-	utils "github.com/Phala-Network/ChainBridge/shared/substrate"
 	events "github.com/Phala-Network/chainbridge-substrate-events"
 	"github.com/Phala-Network/chainbridge-utils/blockstore"
 	metrics "github.com/Phala-Network/chainbridge-utils/metrics/types"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/Phala-Network/go-substrate-rpc-client/v3/types"
+	"github.com/octopus-network/ChainBridge/chains"
+	utils "github.com/octopus-network/ChainBridge/shared/substrate"
 )
 
 type listener struct {

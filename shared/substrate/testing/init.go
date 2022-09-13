@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"testing"
 
-	utils "github.com/Phala-Network/ChainBridge/shared/substrate"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/Phala-Network/go-substrate-rpc-client/v3/types"
+	utils "github.com/octopus-network/ChainBridge/shared/substrate"
 )
 
 // WARNING: THIS METHOD IS UNSAFE AND MAY PANIC

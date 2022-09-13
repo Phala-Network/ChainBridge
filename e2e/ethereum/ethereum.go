@@ -11,21 +11,21 @@ import (
 	"testing"
 	"time"
 
-	bridge "github.com/Phala-Network/ChainBridge/bindings/Bridge"
-	"github.com/Phala-Network/ChainBridge/chains/ethereum"
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
-	ethtest "github.com/Phala-Network/ChainBridge/shared/ethereum/testing"
+	"github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/core"
 	"github.com/Phala-Network/chainbridge-utils/crypto/secp256k1"
 	"github.com/Phala-Network/chainbridge-utils/keystore"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ChainSafe/log15"
 	eth "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
+	bridge "github.com/octopus-network/ChainBridge/bindings/Bridge"
+	"github.com/octopus-network/ChainBridge/chains/ethereum"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
+	ethtest "github.com/octopus-network/ChainBridge/shared/ethereum/testing"
 )
 
 var TestTimeout = time.Second * 30

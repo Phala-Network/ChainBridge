@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"math/big"
 
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
 	"github.com/Phala-Network/chainbridge-utils/core"
 	"github.com/Phala-Network/chainbridge-utils/msg"
 	"github.com/ethereum/go-ethereum/common"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
 const DefaultGasLimit = 6721975
@@ -104,7 +104,8 @@ func parseChainConfig(chainCfg *core.ChainConfig) (*Config, error) {
 		}
 	}
 
-	if gasLimit, ok := chainCfg.Opts[GasLimitOpt]; ok {
+	delete(chainCfg.Opts, GasLimitOpt)
+	/*	if gasLimit, ok := chainCfg.Opts[GasLimitOpt]; ok {
 		limit := big.NewInt(0)
 		_, pass := limit.SetString(gasLimit, 10)
 		if pass {
@@ -113,7 +114,7 @@ func parseChainConfig(chainCfg *core.ChainConfig) (*Config, error) {
 		} else {
 			return nil, errors.New("unable to parse gas limit")
 		}
-	}
+	}*/
 
 	if gasMultiplier, ok := chainCfg.Opts[GasMultiplier]; ok {
 		multilier := big.NewFloat(1)

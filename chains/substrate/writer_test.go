@@ -10,9 +10,9 @@ import (
 
 	"github.com/Phala-Network/go-substrate-rpc-client/v3/types"
 
-	utils "github.com/Phala-Network/ChainBridge/shared/substrate"
-	subtest "github.com/Phala-Network/ChainBridge/shared/substrate/testing"
 	message "github.com/Phala-Network/chainbridge-utils/msg"
+	utils "github.com/octopus-network/ChainBridge/shared/substrate"
+	subtest "github.com/octopus-network/ChainBridge/shared/substrate/testing"
 )
 
 func assertProposalState(t *testing.T, conn *Connection, prop *proposal, votes *voteState, hasValue bool) {

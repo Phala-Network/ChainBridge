@@ -9,9 +9,9 @@ import (
 	"math/big"
 	"time"
 
-	utils "github.com/Phala-Network/ChainBridge/shared/ethereum"
-	"github.com/Phala-Network/chainbridge-utils/msg"
 	log "github.com/ChainSafe/log15"
+	"github.com/Phala-Network/chainbridge-utils/msg"
+	utils "github.com/octopus-network/ChainBridge/shared/ethereum"
 )
 
 // Number of blocks to wait for an finalization event
@@ -197,7 +197,7 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 		default:
 			// watch for the lastest block, retry up to BlockRetryLimit times
 			for waitRetrys := 0; waitRetrys < BlockRetryLimit; waitRetrys++ {
-				err := w.conn.WaitForBlock(latestBlock, w.cfg.blockConfirmations)
+				err := w.conn.WaitForBlock(latestBlock, big.NewInt(0))
 				if err != nil {
 					w.log.Error("Waiting for block failed", "err", err)
 					// Exit if retries exceeded
@@ -213,6 +213,8 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 
 			// query for logs
 			query := buildQuery(w.cfg.bridgeContract, utils.ProposalEvent, latestBlock, latestBlock)
+			w.log.Debug("querying for proposal event", "query", query)
+
 			evts, err := w.conn.Client().FilterLogs(context.Background(), query)
 			if err != nil {
 				w.log.Error("Failed to fetch logs", "err", err)
@@ -221,6 +223,7 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 
 			// execute the proposal once we find the matching finalized event
 			for _, evt := range evts {
+				w.log.Debug("watching for proposal event", "event", evt)
 				sourceId := evt.Topics[1].Big().Uint64()
 				depositNonce := evt.Topics[2].Big().Uint64()
 				status := evt.Topics[3].Big().Uint64()
@@ -254,6 +257,10 @@ func (w *writer) voteProposal(m msg.Message, dataHash [32]byte) {
 				w.log.Error("Failed to update tx opts", "err", err)
 				continue
 			}
+			w.log.Trace("In voteProposal", "w", w)
+			w.log.Trace("In voteProposal", "w.conn", w.conn)
+			w.log.Trace("In voteProposal", "w.conn.Opts()", w.conn.Opts())
+			w.log.Trace("In voteProposal", "w.conn.CallOpts()", w.conn.CallOpts())
 
 			tx, err := w.bridgeContract.VoteProposal(
 				w.conn.Opts(),

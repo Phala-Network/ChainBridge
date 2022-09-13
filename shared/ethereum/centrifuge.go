@@ -4,8 +4,8 @@
 package utils
 
 import (
-	"github.com/Phala-Network/ChainBridge/bindings/CentrifugeAsset"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/octopus-network/ChainBridge/bindings/CentrifugeAsset"
 )
 
 func DeployAssetStore(client *Client) (common.Address, error) {

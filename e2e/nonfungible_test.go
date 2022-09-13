@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"testing"
 
-	eth "github.com/Phala-Network/ChainBridge/e2e/ethereum"
-	sub "github.com/Phala-Network/ChainBridge/e2e/substrate"
-	ethtest "github.com/Phala-Network/ChainBridge/shared/ethereum/testing"
-	subtest "github.com/Phala-Network/ChainBridge/shared/substrate/testing"
 	log "github.com/ChainSafe/log15"
 	"github.com/Phala-Network/go-substrate-rpc-client/v3/types"
+	eth "github.com/octopus-network/ChainBridge/e2e/ethereum"
+	sub "github.com/octopus-network/ChainBridge/e2e/substrate"
+	ethtest "github.com/octopus-network/ChainBridge/shared/ethereum/testing"
+	subtest "github.com/octopus-network/ChainBridge/shared/substrate/testing"
 )
 
 func testErc721ToSubstrateRoundTrip(t *testing.T, ctx *testContext) {

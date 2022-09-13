@@ -11,13 +11,13 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/Phala-Network/ChainBridge/config"
+	log "github.com/ChainSafe/log15"
 	"github.com/Phala-Network/chainbridge-utils/crypto"
 	"github.com/Phala-Network/chainbridge-utils/crypto/secp256k1"
 	"github.com/Phala-Network/chainbridge-utils/crypto/sr25519"
 	"github.com/Phala-Network/chainbridge-utils/keystore"
-	log "github.com/ChainSafe/log15"
 	gokeystore "github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/octopus-network/ChainBridge/config"
 	"github.com/urfave/cli/v2"
 )
 
@@ -160,12 +160,12 @@ func importPrivKey(ctx *cli.Context, keytype, datadir, key string, password []by
 	if keytype == crypto.Sr25519Type {
 		// generate sr25519 keys
 		networkString := ctx.String(config.SubkeyNetworkFlag.Name)
-        	network, err := strconv.ParseInt(networkString, 10, 8)
-        	if err != nil {
-                	// defaults to generic substrate address
-                	// https://github.com/paritytech/substrate/wiki/External-Address-Format-(SS58)#checksum-types
-                	network = 42
-        	}
+		network, err := strconv.ParseInt(networkString, 10, 8)
+		if err != nil {
+			// defaults to generic substrate address
+			// https://github.com/paritytech/substrate/wiki/External-Address-Format-(SS58)#checksum-types
+			network = 42
+		}
 		kp, err = sr25519.NewKeypairFromSeed(key, uint8(network))
 		if err != nil {
 			return "", fmt.Errorf("could not generate sr25519 keypair from given string: %w", err)
