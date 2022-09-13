@@ -8,10 +8,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Phala-Network/chainbridge-utils/msg"
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"math/big"
-	"strings"
 	"time"
 
 	"github.com/ChainSafe/log15"
@@ -173,27 +171,10 @@ func (l *listener) getDepositEventsForBlock(latestBlock *big.Int) error {
 	for _, log := range logs {
 		l.log.Debug("Querying block for deposit events", "log", log)
 
-		bridgeAbi, err := abi.JSON(strings.NewReader(string(Bridge.BridgeABI)))
-		if err != nil {
-			return fmt.Errorf("failed to read abi from Bridge.go")
-		}
-
-		_out, err := bridgeAbi.Unpack("Deposit", log.Data)
-		if err != nil {
-			return fmt.Errorf("failed to unpack event")
-		}
-		l.log.Debug("parsed event", "event", _out)
-
 		var m msg.Message
-		destId := msg.ChainId(_out[0].(uint8))
-
-		var paramSlice []byte
-		for _, param := range _out[1].([32]uint8) {
-			paramSlice = append(paramSlice, param)
-		}
-
-		rId := msg.ResourceIdFromSlice(paramSlice)
-		nonce := msg.Nonce(_out[2].(uint64))
+		destId := msg.ChainId(log.Topics[1].Big().Uint64())
+		rId := msg.ResourceIdFromSlice(log.Topics[2].Bytes())
+		nonce := msg.Nonce(log.Topics[3].Big().Uint64())
 
 		addr, err := l.bridgeContract.ResourceIDToHandlerAddress(&bind.CallOpts{From: l.conn.Keypair().CommonAddress()}, rId)
 		if err != nil {

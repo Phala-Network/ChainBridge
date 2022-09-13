@@ -30,7 +30,7 @@ var (
 
 // IERCHandlerMetaData contains all meta data concerning the IERCHandler contract.
 var IERCHandlerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"resourceID\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setResource\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setBurnable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amountOrTokenID\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"resourceID\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setResource\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"}],\"name\":\"setBurnable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"contractAddress\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"srcDecimals\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"destDecimals\",\"type\":\"uint8\"}],\"name\":\"setDecimals\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amountOrTokenID\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // IERCHandlerABI is the input ABI used to generate the binding from.
@@ -198,6 +198,27 @@ func (_IERCHandler *IERCHandlerSession) SetBurnable(contractAddress common.Addre
 // Solidity: function setBurnable(address contractAddress) returns()
 func (_IERCHandler *IERCHandlerTransactorSession) SetBurnable(contractAddress common.Address) (*types.Transaction, error) {
 	return _IERCHandler.Contract.SetBurnable(&_IERCHandler.TransactOpts, contractAddress)
+}
+
+// SetDecimals is a paid mutator transaction binding the contract method 0xf4712744.
+//
+// Solidity: function setDecimals(address contractAddress, uint8 srcDecimals, uint8 destDecimals) returns()
+func (_IERCHandler *IERCHandlerTransactor) SetDecimals(opts *bind.TransactOpts, contractAddress common.Address, srcDecimals uint8, destDecimals uint8) (*types.Transaction, error) {
+	return _IERCHandler.contract.Transact(opts, "setDecimals", contractAddress, srcDecimals, destDecimals)
+}
+
+// SetDecimals is a paid mutator transaction binding the contract method 0xf4712744.
+//
+// Solidity: function setDecimals(address contractAddress, uint8 srcDecimals, uint8 destDecimals) returns()
+func (_IERCHandler *IERCHandlerSession) SetDecimals(contractAddress common.Address, srcDecimals uint8, destDecimals uint8) (*types.Transaction, error) {
+	return _IERCHandler.Contract.SetDecimals(&_IERCHandler.TransactOpts, contractAddress, srcDecimals, destDecimals)
+}
+
+// SetDecimals is a paid mutator transaction binding the contract method 0xf4712744.
+//
+// Solidity: function setDecimals(address contractAddress, uint8 srcDecimals, uint8 destDecimals) returns()
+func (_IERCHandler *IERCHandlerTransactorSession) SetDecimals(contractAddress common.Address, srcDecimals uint8, destDecimals uint8) (*types.Transaction, error) {
+	return _IERCHandler.Contract.SetDecimals(&_IERCHandler.TransactOpts, contractAddress, srcDecimals, destDecimals)
 }
 
 // SetResource is a paid mutator transaction binding the contract method 0xb8fa3736.

@@ -6,10 +6,7 @@ package ethereum
 import (
 	"context"
 	"errors"
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/octopus-network/ChainBridge/bindings/Bridge"
 	"math/big"
-	"strings"
 	"time"
 
 	log "github.com/ChainSafe/log15"
@@ -224,26 +221,12 @@ func (w *writer) watchThenExecute(m msg.Message, data []byte, dataHash [32]byte,
 				return
 			}
 
-			bridgeAbi, err := abi.JSON(strings.NewReader(string(Bridge.BridgeABI)))
-			if err != nil {
-				w.log.Error("err", "err", err)
-				return
-			}
-
 			// execute the proposal once we find the matching finalized event
 			for _, evt := range evts {
 				w.log.Debug("watching for proposal event", "event", evt)
-
-				event, err := bridgeAbi.Unpack("ProposalEvent", evt.Data)
-				if err != nil {
-					w.log.Error("err", "err", err)
-					return
-				}
-				w.log.Debug("parse for proposal event", "event", event)
-
-				sourceId := event[0].(uint8)
-				depositNonce := event[1].(uint64)
-				status := event[2].(uint8)
+				sourceId := evt.Topics[1].Big().Uint64()
+				depositNonce := evt.Topics[2].Big().Uint64()
+				status := evt.Topics[3].Big().Uint64()
 
 				if m.Source == msg.ChainId(sourceId) &&
 					m.DepositNonce.Big().Uint64() == depositNonce &&
